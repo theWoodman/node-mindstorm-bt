@@ -11,6 +11,7 @@ var SerialPort = serialport.SerialPort;
 
 var Nxt = function (port) {
 	this.initialized = false;
+	this.debug = false;
 
 	this.sp = new SerialPort(port, {
 		parser: serialport.parsers.raw
@@ -147,7 +148,12 @@ Nxt.prototype.set_output_state = function (port, power, mode, reg_mode, turn_rat
 	tacho[1] = (tacho_limit >> 8) & 0xff;
 	tacho[2] = (tacho_limit >> 16) & 0xff;
 	tacho[3] = (tacho_limit >> 24) & 0xff;
-	var command_arr = [0x00, 0x04, port, ((power + 100) % 200) - 100, mode, reg_mode, ((turn_ratio + 100) % 200), run_state, tacho[0], tacho[1], tacho[2], tacho[3]];
+	// The speed is set between -100 and 100
+	var speed = power+100;
+/*	if (power < 0) {
+		speed = 255-power;
+	}*/
+	var command_arr = [0x00, 0x04, port, speed, mode, reg_mode, ((turn_ratio + 100) % 200), run_state, tacho[0], tacho[1], tacho[2], tacho[3]];
 	var command = new Buffer(command_arr);	
 	this.execute_command(command);
 };
@@ -248,7 +254,9 @@ Nxt.prototype.execute_command = function (command, callback) {
 
 Nxt.prototype.status_handle = function (data) {
 	data = data.slice(2);
-	console.log(data);
+	if (this.debug) {
+		console.log(data);
+	}
 	if (data[2] > 0) {
 		console.log("Error did happen!!!\nThe error: " + this.nxt_error_messages[data[2]]);
 	} else {
@@ -279,7 +287,11 @@ Nxt.prototype.register_callback = function (method, callback) {
 };
 
 Nxt.prototype.close_connection = function (sp) {
-	sp.end(false,null);
+	//sp.end(false,null);
+	if (this.debug) {
+		console.log("Closing serialport connection");
+	}
+	this.sp.end(false, null);
 };
 
 module.exports.Nxt = Nxt;
