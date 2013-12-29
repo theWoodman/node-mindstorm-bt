@@ -134,15 +134,6 @@ users adm dialout cdrom floppy audio dip video plugdev scanner lpadmin admin net
 
 In other utilities you should be able to use /dev/legonxt-x-y or /dev/rfcomm0 to communicate with your NXT by USB or Bluetooth respectively.
 
-The NBC compiler has built-in usb and bluetooth support for Linux.  You can just type
-
-```
-nbc -d -S=usb program.nxc
-```
-
-and the compiler will compile the program and download it to your NXT.  The NeXTTool utility is also available with lots of NXT communication options from a terminal prompt.  I also have an NeXT Tools graphical utility working for Linux too.
-
-
 # Bigger example
 
 TODO
