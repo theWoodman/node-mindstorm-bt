@@ -76,6 +76,29 @@ var Nxt = function (port) {
 	this.ANGLESTEPSMODE = 0xe0;
 	this.SLOPEMASK = 0x1f;
 	this.MODEMASK = 0xe0;
+	
+	// Events ids
+	this.EVENTID = {
+		'startprogram' : 0x00,
+		'stopprogram' : 0x01,
+		'playsoundfile': 0x02,
+		'playtone' : 0x03,
+		'setoutputstate' : 0x04,
+		'setinputmode' : 0x05,
+		'getoutputstate' : 0x06,
+		'getinputvalue' : 0x07,
+		'resetinputscaledvalue' : 0x08,
+		'messagewrite' : 0x09,
+		'resetmotorposition' : 0x0A,
+		'getbatterylevel' : 0x0B,
+		'stopsoundplayback' : 0x0C,
+		'keepalive' : 0x0D,
+		'lsgetstatus' : 0x0E,
+		'lswrite' : 0x0F,
+		'lsread' : 0x10,
+		'getcurrentprogramname' : 0x11,
+		'messageread' : 0x13
+	};
 };
 
 Nxt.prototype.nxt_error_messages = {
@@ -246,6 +269,12 @@ Nxt.prototype.execute_command = function (command, callback) {
 		console.log("NXT not initialized!!!");
 	}
 	this.sp.write(real_command);
+};
+
+Nxt.prototype.on = function(event, handler){
+	if(this.EVENTID.hasOwnProperty(event)){
+		this.sp.data_handles[this.EVENTID[event]] = handler;
+	}
 };
 
 Nxt.prototype.status_handle = function (data) {
