@@ -137,4 +137,3 @@ In other utilities you should be able to use /dev/legonxt-x-y or /dev/rfcomm0 to
 # Bigger example
 
 TODO
-TODO more
